@@ -1,5 +1,5 @@
 {
-  "name": "json-to-html",
+  "name": "@devanshdeveloper/json-to-html",
   "version": "1.0.0",
   "description": "It converts json to html",
   "main": "index.js",

@@ -1,30 +1,30 @@
-# json-to-html
+# @devanshdeveloper/json-to-html
 
-json-to-html is an npm package that allows you to dynamically manipulate the DOM using JSON-like data structures. It enables the creation and customization of HTML elements, applying styles, attributes, and event listeners based on JSON objects. This package can be used to generate HTML content from dynamic data and inject it directly into the DOM.
+@devanshdeveloper/json-to-html is an npm package that allows you to dynamically manipulate the DOM using JSON-like data structures. It enables the creation and customization of HTML elements, applying styles, attributes, and event listeners based on JSON objects. This package can be used to generate HTML content from dynamic data and inject it directly into the DOM.
 
 ## Installation
 To install the package, use npm:
 
 ```bash
-npm install json-to-html
+npm install @devanshdeveloper/json-to-html
 
 ```
 
 ## Usage
-You can use json-to-html to dynamically generate HTML content by providing JSON objects that describe the structure, attributes, and children of elements.
+You can use @devanshdeveloper/json-to-html to dynamically generate HTML content by providing JSON objects that describe the structure, attributes, and children of elements.
 
 ## Importing
 You can import the package using:
 
 ```js
-import { JSONToHTML } from "json-to-html";
+import { JSONToHTML } from "@devanshdeveloper/json-to-html";
 ```
 
 ## Example Usage
 
-Here's a basic example of how to use json-to-html to dynamically generate HTML content using native DOM methods like document.querySelector.
+Here's a basic example of how to use @devanshdeveloper/json-to-html to dynamically generate HTML content using native DOM methods like document.querySelector.
 ```js 
-import { JSONToHTML } from "json-to-html";
+import { JSONToHTML } from "@devanshdeveloper/json-to-html";
 
 const jsonToHtml = new JSONToHTML();
 
@@ -139,7 +139,7 @@ This example generates a structure with a div container that contains elements f
 This project is licensed under the MIT License.
 
 ## Contributing
-Contributions are welcome! If you would like to contribute to json-to-html, feel free to submit a pull request or file an issue.
+Contributions are welcome! If you would like to contribute to @devanshdeveloper/json-to-html, feel free to submit a pull request or file an issue.
 
 ## Contact
 If you have any questions or issues, feel free to reach out via the GitHub repository or open an issue.
