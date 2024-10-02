@@ -1,0 +1,15 @@
+{
+  "name": "json-to-html",
+  "version": "1.0.0",
+  "description": "It converts json to html",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Devansh Khetwani",
+  "license": "ISC",
+  "dependencies": {
+    "extendeddomjs": "^1.0.1"
+  }
+}
