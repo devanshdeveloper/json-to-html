@@ -1,15 +1,36 @@
 {
   "name": "@devanshdeveloper/json-to-html",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "It converts json to html",
-  "main": "index.js",
-  "type": "module",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:cjs": "tsc --outDir dist/cjs --module commonjs",
+    "build:esm": "tsc --outDir dist/esm --module esnext",
+    "build": "npm run build:cjs && npm run build:esm",
+    "watch:cjs": "tsc --outDir dist/cjs --module commonjs --watch",
+    "watch:esm": "tsc --outDir dist/esm --module esnext --watch",
+    "watch": "npm run watch:esm & npm run watch:cjs",
+    "publish": "git add . && git commit -m /\"code updated\"/ && git push && npm publish"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/devanshdeveloper/json-to-html.git"
+  },
+  "keywords": [
+    "dom",
+    "utility",
+    "javascript",
+    "json",
+    "html",
+    "convert",
+    "parse"
+  ],
   "author": "Devansh Khetwani",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "extendeddomjs": "^1.0.1"
+    "extendeddomjs": "^1.0.5",
+    "typescript": "^5.0.0"
   }
 }
