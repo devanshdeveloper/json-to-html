@@ -240,13 +240,19 @@ This example dynamically converts the height and width of the div from px to em.
 
 ### Functions
 
-- convert(json: ElementData[], parentElement: HTMLElement | null) : Converts a JSON into DOM elements and appends them to the specified parent element.
-  -- json: A JSON array describing the HTML structure.
-  -- parentElement: The parent DOM element where the generated elements will be appended.
+#### `convert(json: ElementData[], parentElement: HTMLElement | null)`
 
-- compile(template: any, data: any) : Applies dynamic data to a template containing placeholders ({{}}) and returns a populated JSON structure.
-  -- template: A JSON object describing the HTML structure.
-  -- data: Dynamic data to replace placeholders.
+Converts a JSON array into DOM elements and appends them to the specified parent element.
+
+- **json**: A JSON array describing the HTML structure.
+- **parentElement**: The parent DOM element where the generated elements will be appended.
+
+#### `compile(template: any, data: any)`
+
+Applies dynamic data to a template containing placeholders (`{{}}`) and returns a populated JSON structure.
+
+- **template**: A JSON object describing the HTML structure with placeholders.
+- **data**: Dynamic data to replace placeholders in the template.
 
 ## License
 
