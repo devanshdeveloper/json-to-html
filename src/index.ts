@@ -1,80 +1,68 @@
-import { $$, ExtendedDOMJS } from "extendeddomjs";
+import { $$ } from "extendeddomjs";
+import isThis from "@devanshdeveloper/is-this";
+import LangJSON from "lang-json";
+import unit from "css-unit-manager";
 
-type DynamicValues = Record<string, any>;
-
-interface ElementData {
+export interface ElementData {
   tag: string;
   attributes: Record<string, string | string[] | any>;
   children?: ElementData[];
 }
 
 export class JSONToHTML {
-  constructor() {}
+  langJson: LangJSON;
 
-  manipulateDOMFromJSON(
-    elementsArray: ElementData[],
-    parentElement: HTMLElement,
-    dynamicValues: DynamicValues
-  ): void {
-    elementsArray.forEach((elementData) => {
-      const newElement: ExtendedDOMJS = $$(elementData.tag);
-
-      for (const method in elementData.attributes) {
-        if (Object.hasOwnProperty.call(elementData.attributes, method)) {
-          const value = elementData.attributes[method];
-          if (typeof value === "string") {
-            (newElement as any)[method](
-              this.replacePlaceholders(value, dynamicValues)
-            );
-            continue;
-          }
-
-          if (Array.isArray(value)) {
-            const replacedValues = value.map((e) =>
-              this.replacePlaceholders(e, dynamicValues)
-            );
-            (newElement as any)[method](...replacedValues);
-            continue;
-          }
-
-          (newElement as any)[method](value);
-        }
-      }
-
-      parentElement.appendChild(newElement.el as HTMLElement);
-      if (elementData.children && elementData.children.length > 0) {
-        this.manipulateDOMFromJSON(
-          elementData.children,
-          newElement.el as HTMLElement,
-          dynamicValues
-        );
-      }
+  constructor() {
+    this.langJson = new LangJSON();
+    this.langJson.registerHelpers({
+      cssConvert([string, toUnit]) {
+        return unit(string).toUnit(toUnit).toString();
+      },
     });
   }
 
-  replacePlaceholders(text: string, dynamicValues: DynamicValues): string {
-    let value: any = dynamicValues;
-    if (typeof text !== "string" || !text.includes("{{")) return text;
-
-    text.replace(/{{(.*?)}}/g, (match, key) => {
-      const keys = key.trim().split(".");
-      for (const nestedKey of keys) {
-        if (value && typeof value === "object" && nestedKey in value) {
-          value = value[nestedKey];
-        } else {
-          value = match;
-          return value;
-        }
-      }
-    });
-    return value;
+  compile(template: any, data: any) {
+    return this.langJson.applyTemplate(template, data);
   }
 
   convert(
-    json: ElementData,
-    appendTo: HTMLElement,
-    dynamicValues: DynamicValues
+    elementsArray: ElementData[] | undefined,
+    parentElement: HTMLElement | null
   ): void {
-    this.manipulateDOMFromJSON([json], appendTo, dynamicValues);
+    if (!elementsArray) return;
+    
+    if (isThis.isString(elementsArray)) {
+      elementsArray = [{ tag: "div", attributes: { html: elementsArray } }];
+    }
+
+    if (isThis.isObject(elementsArray)) {
+      elementsArray = [elementsArray as any];
+    }
+
+    for (let i = 0; i < elementsArray.length; i++) {
+      const element = elementsArray[i];
+      const newElement = $$(element.tag);
+
+      // looping in attributes
+      for (const method in element.attributes) {
+        if (Object.hasOwnProperty.call(element.attributes, method)) {
+          // args
+          const args = element.attributes[method];
+          if (isThis.isFunction((newElement as any)[method])) {
+            if (isThis.isArray(args)) {
+              (newElement as any)[method](...args);
+            } else {
+              (newElement as any)[method](args);
+            }
+          } else {
+            throw new Error("Method not found : " + method);
+          }
+        }
+      }
+      parentElement?.appendChild(newElement.el as HTMLElement);
+      if (!isThis.isEmptyArray(element.children)) {
+        this.convert(element.children, newElement.el as HTMLElement);
+      }
+    }
   }
 }

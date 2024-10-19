@@ -1,145 +1,257 @@
 # @devanshdeveloper/json-to-html
 
-@devanshdeveloper/json-to-html is an npm package that allows you to dynamically manipulate the DOM using JSON-like data structures. It enables the creation and customization of HTML elements, applying styles, attributes, and event listeners based on JSON objects. This package can be used to generate HTML content from dynamic data and inject it directly into the DOM.
+`@devanshdeveloper/json-to-html` is an npm package that allows you to dynamically create and manipulate the DOM using JSON-like data structures. It simplifies the creation of HTML elements, applying attributes, styles, event listeners, and more—all based on JSON objects. This package is ideal for generating HTML content from dynamic data and injecting it directly into the DOM.
 
 ## Installation
-To install the package, use npm:
+
+You can install the package via npm:
 
 ```bash
 npm install @devanshdeveloper/json-to-html
-
 ```
 
 ## Usage
-You can use @devanshdeveloper/json-to-html to dynamically generate HTML content by providing JSON objects that describe the structure, attributes, and children of elements.
+
+`@devanshdeveloper/json-to-html` enables you to describe the structure, attributes, and children of elements in JSON format and convert them into HTML. You can dynamically populate and manage the DOM using this structured data.
 
 ## Importing
-You can import the package using:
 
-```js
+To use the package, import it as follows:
+
+```typescript
 import { JSONToHTML } from "@devanshdeveloper/json-to-html";
 ```
 
 ## Example Usage
 
-Here's a basic example of how to use @devanshdeveloper/json-to-html to dynamically generate HTML content using native DOM methods like document.querySelector.
-```js 
+### 1. Basic Example: Creating Simple HTML Structure
+
+This example demonstrates how to create a simple HTML structure with a div and child elements like h1 and p:
+
+```typescript
 import { JSONToHTML } from "@devanshdeveloper/json-to-html";
 
 const jsonToHtml = new JSONToHTML();
 
-const dynamicData = {
-  "tag": "div",
-  "attributes": {
-    "data": ["dish_id", "{{item.id}}"],
-    "styles": {
-      "display": "flex",
-      "flexDirection": "column",
-      "gap": "100px"
-    }
-  },
-  "children": [
-    {
-      "tag": "div",
-      "attributes": {
-        "html": "{{item.name}}",
-        "addClass" : "container",
-        "styles": {
-          "fontSize": "12px",
-          "textAlign": "center"
-        }
-      }
-    },
-    {
-      "tag": "div",
-      "attributes": {
-        "html": "{{item.description}}",
-        "styles": {
-          "fontSize": "12px",
-          "textAlign": "center"
-        }
-      }
-    },
-    {
-      "tag": "div",
-      "attributes": {
-        "styles": {
-          "display": "flex",
-          "justifyContent": "space-between"
-        }
+const productCardTemplate = {
+  "{{#each products}}": {
+    tag: "div",
+    attributes: {
+      styles: {
+        width: "300px",
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+        overflow: "hidden",
+        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+        transition: "0.3s",
+        backgroundColor: "#fff",
+        fontFamily: "Arial, sans-serif",
       },
-      "children": [
-        {
-          "tag": "div",
-          "attributes": {
-            "styles": {
-              "fontSize": "10px"
-            },
-            "html": "{{item.availability}}"
-          }
+      addClass: "product-card",
+    },
+    children: [
+      {
+        tag: "img",
+        attributes: {
+          attr: {
+            src: "{{#var item.imageUrl}}",
+            alt: "{{#var item.imageAlt}}",
+          },
+          styles: { width: "100%", height: "auto" },
         },
-        {
-          "tag": "div",
-          "attributes": {
-            "styles": {
-              "fontSize": "10px"
+      },
+      {
+        tag: "div",
+        attributes: { styles: { padding: "16px" } },
+        children: [
+          {
+            tag: "h2",
+            attributes: {
+              html: "{{#var item.title}}",
+              styles: { fontSize: "1.2em", marginBottom: "10px" },
             },
-            "html": "{{item.price}}"
-          }
-        }
-      ]
-    }
-  ]
+          },
+          {
+            tag: "p",
+            attributes: {
+              html: "{{#var item.description}}",
+              styles: {
+                fontSize: "0.9em",
+                color: "#666",
+                marginBottom: "10px",
+              },
+            },
+          },
+          {
+            tag: "p",
+            attributes: {
+              html: "${{#var item.price}}",
+              styles: {
+                fontSize: "1.1em",
+                fontWeight: "bold",
+                color: "#1a1a1a",
+                marginBottom: "15px",
+              },
+            },
+          },
+          {
+            tag: "button",
+            attributes: {
+              html: "Buy Now",
+              styles: {
+                padding: "10px",
+                backgroundColor: "#4CAF50",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              },
+            },
+          },
+        ],
+      },
+    ],
+  },
 };
 
-jsonToHtml.convert(dynamicData, document.querySelector("#app"), { item: { name: "Dish", description: "A delicious dish", availability: "Available", price: "$10.00" } });
-
-```
-
-This example generates a structure with a div container that contains elements for name, description, availability, and price. It uses dynamic placeholders like {{item.name}}, which are replaced with the actual values passed in the dynamicValues parameter.
-
-## Functions
-
- - convert(json, appendTo, dynamicValues)
-  - json: A JSON object that defines the HTML structure and attributes.
-  - appendTo: The parent element to which the generated HTML will be appended (e.g., document.querySelector("#app")).
-  - dynamicValues: An object containing dynamic data to replace placeholders in the JSON structure (e.g., {{item.name}}).
- - replacePlaceholders(text, dynamicValues): Replaces placeholder values inside strings with actual dynamic data.
-
- - manipulateDOMFromJSON(elementsArray, parentElement, dynamicValues) 
- Generates HTML elements from a JSON array and appends them to the parent element.
-
-## JSON Structure
- - tag: The HTML tag name (e.g., "div", "span", "h1").
- - attributes: An object containing the attributes or methods to be applied to the element (e.g., "html", "styles", "data", etc.).
- - children: An optional array containing child elements, each represented by a similar JSON structure.
-
-## Example JSON
-```json
-{
-  "tag": "div",
-  "attributes": {
-    "html": "This is a sample div",
-    "styles": {
-      "color": "blue",
-      "fontSize": "16px"
-    }
+const products = [
+  {
+    title: "Wireless Headphones",
+    description: "Noise-canceling headphones",
+    price: 99.99,
+    imageUrl: "https://via.placeholder.com/300x200?text=Headphones",
+    imageAlt: "Wireless Headphones",
   },
-  "children": [
-    {
-      "tag": "span",
-      "attributes": {
-        "html": "Child element"
-      }
-    }
-  ]
-}
+  {
+    title: "Smartphone Stand",
+    description: "Adjustable smartphone stand",
+    price: 14.99,
+    imageUrl: "https://via.placeholder.com/300x200?text=Smartphone+Stand",
+    imageAlt: "Smartphone Stand",
+  },
+  // Other products here...
+];
+
+const compiledTemplate = jsonToHtml.compile(
+  {
+    tag: "div",
+    attributes: {
+      styles: { display: "flex", gap: "20px", flexWrap: "wrap" },
+    },
+    children: productCardTemplate,
+  },
+  { products }
+);
+jsonToHtml.convert(compiledTemplate, document.querySelector("#app"));
 ```
+
+### 2. Handling Conditional Rendering
+
+This example demonstrates conditional rendering within the JSON structure. Let's say you only want to show the "Out of Stock" message if the product is not available.
+
+```typescript
+const jsonToHtml = new JSONToHTML();
+
+const conditionalTemplate = {
+  tag: "div",
+  attributes: {
+    addClass: "product-card",
+    styles: {
+      border: "1px solid #ccc",
+      borderRadius: "8px",
+      padding: "16px",
+      marginBottom: "20px",
+    },
+  },
+  children: [
+    {
+      tag: "h2",
+      attributes: {
+        html: "{{#var item.name}}",
+        styles: {
+          fontSize: "18px",
+          color: "#333",
+        },
+      },
+    },
+    {
+      tag: "p",
+      attributes: {
+        html: "{{#var item.description}}",
+        styles: {
+          fontSize: "14px",
+          color: "#666",
+        },
+      },
+    },
+    {
+      tag: "p",
+      attributes: {
+        html: "{{#if item.inStock 'In Stock' 'Out of Stock'}}",
+        styles: {
+          color: "{{#if item.inStock 'green' 'red'}}",
+          fontWeight: "bold",
+        },
+      },
+    },
+  ],
+};
+
+// Single product data
+const productData = {
+  item: {
+    name: "Gaming Laptop",
+    description: "High-performance laptop",
+    inStock: false,
+  },
+};
+
+const compiledTemplate = jsonToHtml.compile(conditionalTemplate, productData);
+jsonToHtml.convert(compiledTemplate, document.querySelector("#app"));
+```
+
+### 3. Unit Conversion Helper
+
+You can also use the custom helper cssConvert for unit conversion within your styles:
+
+```typescript
+const jsonToHtml = new JSONToHTML();
+
+const unitConversionTemplate = {
+  tag: "div",
+  attributes: {
+    styles: {
+      height: "{{#cssConvert '150px' 'em'}}",
+      width: "{{#cssConvert '300px' 'em'}}",
+      backgroundColor: "lightblue",
+      textAlign: "center",
+      padding: "10px",
+    },
+    html: "This div has dynamic unit conversion",
+  },
+};
+
+const compiledTemplate = jsonToHtml.compile(unitConversionTemplate, {});
+
+jsonToHtml.convert(compiledTemplate, document.querySelector("#app"));
+```
+
+This example dynamically converts the height and width of the div from px to em.
+
+### Functions
+
+- convert(json: ElementData[], parentElement: HTMLElement | null) : Converts a JSON into DOM elements and appends them to the specified parent element.
+  -- json: A JSON array describing the HTML structure.
+  -- parentElement: The parent DOM element where the generated elements will be appended.
+
+- compile(template: any, data: any) : Applies dynamic data to a template containing placeholders ({{}}) and returns a populated JSON structure.
+  -- template: A JSON object describing the HTML structure.
+  -- data: Dynamic data to replace placeholders.
+
 ## License
+
 This project is licensed under the MIT License.
 
 ## Contributing
-Contributions are welcome! If you would like to contribute to @devanshdeveloper/json-to-html, feel free to submit a pull request or file an issue.
 
-## Contact
-If you have any questions or issues, feel free to reach out via the GitHub repository or open an issue.
+We welcome contributions! If you’d like to contribute to @devanshdeveloper/json-to-html, please submit a pull request or file an issue on the GitHub repository.

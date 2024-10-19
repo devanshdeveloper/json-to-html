@@ -1,10 +1,11 @@
 {
   "name": "@devanshdeveloper/json-to-html",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "It converts json to html",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
+  "type": "module",
   "scripts": {
     "build:cjs": "tsc --outDir dist/cjs --module commonjs",
     "build:esm": "tsc --outDir dist/esm --module esnext",
@@ -12,7 +13,9 @@
     "watch:cjs": "tsc --outDir dist/cjs --module commonjs --watch",
     "watch:esm": "tsc --outDir dist/esm --module esnext --watch",
     "watch": "npm run watch:esm & npm run watch:cjs",
-    "publish": "git add . && git commit -m /\"code updated\"/ && git push && npm publish"
+    "publish": "git add . && git commit -m /\"code updated\"/ && git push && npm publish",
+    "dev": "nodemon index.ts",
+    "test" : "nodemon test/index.ts"
   },
   "repository": {
     "type": "git",
@@ -30,7 +33,10 @@
   "author": "Devansh Khetwani",
   "license": "MIT",
   "dependencies": {
+    "@devanshdeveloper/is-this": "^1.1.7",
+    "css-unit-manager": "^1.0.2",
     "extendeddomjs": "^1.0.5",
+    "lang-json": "^1.0.3",
     "typescript": "^5.0.0"
   }
 }
