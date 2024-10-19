@@ -1,13 +1,12 @@
-type DynamicValues = Record<string, any>;
-interface ElementData {
+import LangJSON from "lang-json";
+export interface ElementData {
     tag: string;
     attributes: Record<string, string | string[] | any>;
     children?: ElementData[];
 }
 export declare class JSONToHTML {
+    langJson: LangJSON;
     constructor();
-    manipulateDOMFromJSON(elementsArray: ElementData[], parentElement: HTMLElement, dynamicValues: DynamicValues): void;
-    replacePlaceholders(text: string, dynamicValues: DynamicValues): string;
-    convert(json: ElementData, appendTo: HTMLElement, dynamicValues: DynamicValues): void;
+    compile(template: any, data: any): any;
+    convert(elementsArray: ElementData[] | undefined, parentElement: HTMLElement | null): void;
 }
-export {};

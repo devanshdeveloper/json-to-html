@@ -1,50 +1,55 @@
 import { $$ } from "extendeddomjs";
+import isThis from "@devanshdeveloper/is-this";
+import LangJSON from "lang-json";
+import unit from "css-unit-manager";
 export class JSONToHTML {
-    constructor() { }
-    manipulateDOMFromJSON(elementsArray, parentElement, dynamicValues) {
-        elementsArray.forEach((elementData) => {
-            const newElement = $$(elementData.tag);
-            for (const method in elementData.attributes) {
-                if (Object.hasOwnProperty.call(elementData.attributes, method)) {
-                    const value = elementData.attributes[method];
-                    if (typeof value === "string") {
-                        newElement[method](this.replacePlaceholders(value, dynamicValues));
-                        continue;
-                    }
-                    if (Array.isArray(value)) {
-                        const replacedValues = value.map((e) => this.replacePlaceholders(e, dynamicValues));
-                        newElement[method](...replacedValues);
-                        continue;
-                    }
-                    newElement[method](value);
-                }
-            }
-            parentElement.appendChild(newElement.el);
-            if (elementData.children && elementData.children.length > 0) {
-                this.manipulateDOMFromJSON(elementData.children, newElement.el, dynamicValues);
-            }
+    langJson;
+    constructor() {
+        this.langJson = new LangJSON();
+        this.langJson.registerHelpers({
+            cssConvert([string, toUnit]) {
+                return unit(string).toUnit(toUnit).toString();
+            },
         });
     }
-    replacePlaceholders(text, dynamicValues) {
-        let value = dynamicValues;
-        if (typeof text !== "string" || !text.includes("{{"))
-            return text;
-        text.replace(/{{(.*?)}}/g, (match, key) => {
-            const keys = key.trim().split(".");
-            for (const nestedKey of keys) {
-                if (value && typeof value === "object" && nestedKey in value) {
-                    value = value[nestedKey];
-                }
-                else {
-                    value = match;
-                    return value;
+    compile(template, data) {
+        return this.langJson.applyTemplate(template, data);
+    }
+    convert(elementsArray, parentElement) {
+        if (!elementsArray)
+            return;
+        if (isThis.isString(elementsArray)) {
+            elementsArray = [{ tag: "div", attributes: { html: elementsArray } }];
+        }
+        if (isThis.isObject(elementsArray)) {
+            elementsArray = [elementsArray];
+        }
+        for (let i = 0; i < elementsArray.length; i++) {
+            const element = elementsArray[i];
+            const newElement = $$(element.tag);
+            // looping in attributes
+            for (const method in element.attributes) {
+                if (Object.hasOwnProperty.call(element.attributes, method)) {
+                    // args
+                    const args = element.attributes[method];
+                    if (isThis.isFunction(newElement[method])) {
+                        if (isThis.isArray(args)) {
+                            newElement[method](...args);
+                        }
+                        else {
+                            newElement[method](args);
+                        }
+                    }
+                    else {
+                        throw new Error("Method not found : " + method);
+                    }
                 }
             }
-        });
-        return value;
-    }
-    convert(json, appendTo, dynamicValues) {
-        this.manipulateDOMFromJSON([json], appendTo, dynamicValues);
+            parentElement?.appendChild(newElement.el);
+            if (!isThis.isEmptyArray(element.children)) {
+                this.convert(element.children, newElement.el);
+            }
+        }
     }
 }
 //# sourceMappingURL=index.js.map
